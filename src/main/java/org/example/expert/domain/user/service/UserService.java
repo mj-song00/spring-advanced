@@ -25,13 +25,8 @@ public class UserService {
 
     @Transactional
     public void changePassword(long userId, UserChangePasswordRequest userChangePasswordRequest) {
-//        if (userChangePasswordRequest.getNewPassword().length() < 8 ||
-//                !userChangePasswordRequest.getNewPassword().matches(".*\\d.*") ||
-//                !userChangePasswordRequest.getNewPassword().matches(".*[A-Z].*")) {
-//            throw new InvalidRequestException("새 비밀번호는 8자 이상이어야 하고, 숫자와 대문자를 포함해야 합니다.");
-//        }
 
-        validatePassword(userChangePasswordRequest);
+        validateNewPassword(userChangePasswordRequest);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new InvalidRequestException("User not found"));
@@ -47,7 +42,7 @@ public class UserService {
         user.changePassword(passwordEncoder.encode(userChangePasswordRequest.getNewPassword()));
     }
 
-    private void validatePassword(UserChangePasswordRequest userChangePasswordRequest){
+    private void validateNewPassword(UserChangePasswordRequest userChangePasswordRequest){
         if (userChangePasswordRequest.getNewPassword().length() < 8 ||
                 !userChangePasswordRequest.getNewPassword().matches(".*\\d.*") ||
                 !userChangePasswordRequest.getNewPassword().matches(".*[A-Z].*")) {
